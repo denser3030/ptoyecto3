@@ -1,0 +1,1053 @@
+
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <title>PladixOficial - Checker Plus</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --primary-color: #1a3c6e;
+            --secondary-color: #0d2142;
+            --accent-color: #4ac1e0;
+            --text-color: #d9e8ff;
+            --card-bg: rgba(15, 30, 60, 0.9);
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0d2142, #1a3c6e);
+            min-height: 100vh;
+            font-family: 'IBM Plex Mono', monospace;
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1300px;
+            padding: 20px;
+            margin: 0 auto;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 25px 0;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid rgba(74, 193, 224, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn-dark {
+            background: var(--secondary-color);
+            border: 1px solid var(--accent-color);
+            border-radius: 10px;
+            color: var(--text-color);
+            padding: 8px 15px;
+            transition: all 0.2s ease;
+            font-family: 'IBM Plex Mono', monospace;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-dark:hover {
+            background: var(--primary-color);
+            box-shadow: 0 2px 8px rgba(74, 193, 224, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-dark:active {
+            transform: translateY(1px);
+        }
+
+        .btn-dark:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-dark::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+
+        .btn-dark:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(20, 20);
+                opacity: 0;
+            }
+        }
+
+        .btn-icon {
+            background: var(--secondary-color);
+            border: 1px solid var(--accent-color);
+            border-radius: 8px;
+            color: var(--text-color);
+            padding: 6px;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .btn-icon:hover {
+            background: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(74, 193, 224, 0.3);
+        }
+
+        .btn-icon:active {
+            transform: translateY(1px);
+        }
+
+        .custom-select {
+            background: rgba(15, 30, 60, 0.7);
+            border: 1px solid rgba(74, 193, 224, 0.3);
+            color: var(--text-color);
+            border-radius: 10px;
+            padding: 12px auto;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        .custom-select:focus {
+            border-color: var(--accent-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(74, 193, 224, 0.2);
+        }
+
+        .form-control, textarea {
+            background: rgba(15, 30, 60, 0.7);
+            border: 1px solid rgba(74, 193, 224, 0.3);
+            color: var(--text-color);
+            border-radius: 10px;
+            padding: 12px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        .form-control:focus, textarea:focus {
+            border-color: var(--accent-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(74, 193, 224, 0.2);
+        }
+
+        .nav-tabs {
+            background: var(--card-bg);
+            border-radius: 12px 12px 0 0;
+            border-bottom: 1px solid rgba(74, 193, 224, 0.3);
+            margin-top: 25px;
+        }
+
+        .nav-link {
+            color: var(--text-color);
+            padding: 12px 20px;
+            transition: background 0.2s ease, transform 0.2s ease;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .nav-link:hover {
+            background: rgba(74, 193, 224, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            background: rgba(74, 193, 224, 0.2);
+            color: var(--text-color);
+            border-radius: 12px 12px 0 0;
+            border-color: transparent;
+        }
+
+        .tab-content {
+            background: rgba(15, 30, 60, 0.7);
+            border-radius: 0 0 10px 10px;
+            padding: 20px;
+            border: 1px solid rgba(74, 193, 224, 0.3);
+            border-top: none;
+        }
+
+        .tab-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .config-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .table {
+            background: rgba(15, 30, 60, 0.8);
+            color: var(--text-color);
+            border-radius: 12px;
+            border: 1px solid rgba(74, 193, 224, 0.3);
+        }
+
+        .table th {
+            background: var(--primary-color);
+            border-bottom: 1px solid rgba(74, 193, 224, 0.3);
+            padding: 15px;
+        }
+
+        .table td {
+            border-top: 1px solid rgba(74, 193, 224, 0.1);
+            padding: 12px;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            color: var(--text-color);
+            border-radius: 20px;
+            border: 1px solid rgba(74, 193, 224, 0.3);
+            box-shadow: var(--shadow);
+        }
+
+        .modal-header, .modal-footer {
+            border: none;
+            padding: 20px 25px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 25px;
+            font-size: 0.95rem;
+            opacity: 0.85;
+            margin-top: 30px;
+        }
+
+        .footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+            color: #6ad4f0;
+        }
+
+        .badge {
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .badge-success {
+            background-color: rgba(40, 167, 69, 0.8);
+        }
+
+        .badge-danger {
+            background-color: rgba(220, 53, 69, 0.8);
+        }
+
+        .badge-warning {
+            background-color: rgba(255, 193, 7, 0.8);
+            color: #212529;
+        }
+
+        .badge-info {
+            background-color: rgba(23, 162, 184, 0.8);
+        }
+
+        .badge-secondary {
+            background-color: rgba(108, 117, 125, 0.8);
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+            position: relative;
+        }
+
+        .form-group label {
+            margin-bottom: 0.5rem;
+            display: block;
+            font-weight: 500;
+        }
+
+        .form-group .input-icon {
+            position: absolute;
+            top: 50%;
+            right: 12px;
+            transform: translateY(-50%);
+            color: var(--accent-color);
+            opacity: 0.7;
+        }
+
+        .form-group .form-control {
+            padding-right: 35px;
+        }
+
+        .form-group .form-text {
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+            color: rgba(217, 232, 255, 0.7);
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(74, 193, 224, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(74, 193, 224, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(74, 193, 224, 0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-buttons, .control-buttons {
+                justify-content: center;
+            }
+            .card {
+                padding: 20px;
+            }
+            .config-section {
+                grid-template-columns: 1fr;
+            }
+            .table td, .table th {
+                font-size: 0.9rem;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <input type="hidden" value="" name="token_api" id="token_api">
+
+        <div class="container">
+        <div class="header-buttons">
+            <a href="?logout" class="btn btn-dark animate__animated animate__fadeIn"><i class="fa-solid fa-right-from-bracket"></i> Sair</a>
+                    </div>
+
+        <div class="card animate__animated animate__fadeIn">
+            <h3><i class="fa-solid fa-shield-halved"></i> PladixOficial - Checker Plus</h3>
+            
+            <div class="control-buttons mt-3">
+                <button class="btn btn-dark" id="chk-start" disabled><i class="fa-solid fa-play"></i> Iniciar</button>
+                <button class="btn btn-dark" id="chk-pause" disabled><i class="fa-solid fa-pause"></i> Pausar</button>
+                <button class="btn btn-dark" id="chk-stop" disabled><i class="fa-solid fa-stop"></i> Parar</button>
+                <button class="btn btn-dark" id="chk-clean"><i class="fa-solid fa-trash-can"></i> Limpar</button>
+            </div>
+
+            <div class="mt-3">
+                <span class="badge badge-warning" id="estatus">Aguardando início...</span>
+            </div>
+
+            <div class="config-section">
+                <div>
+                    <label for="api-select">Selecionar API:</label>
+                    <select id="api-select" class="custom-select">
+                        <option value="">-- Escolha uma API --</option>
+                        <option value="amzpay.php">ALLBINS (AMAZONPAY)</option>
+                        <option value="amzpayv2.php">ALLBINS (AMAZONPAY v2)</option>
+                </select>
+                </div>
+                <div>
+                    <label for="thread-select">Velocidade:</label>
+                    <select id="thread-select" class="custom-select">
+                                                    <option value="1">1x</option>
+                                                    <option value="2">2x</option>
+                                                    <option value="3">3x</option>
+                                                    <option value="4">4x</option>
+                                            </select>
+                </div>
+            </div>
+
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#chk-home" role="tab"><i class="fa-solid fa-credit-card"></i> Cartões</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#chk-lives" role="tab"><i class="fa-solid fa-thumbs-up"></i> Aprovados</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#chk-dies" role="tab"><i class="fa-solid fa-thumbs-down"></i> Recusados</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="errors-tab" data-toggle="tab" href="#chk-errors" role="tab"><i class="fa-solid fa-circle-xmark"></i> Erros</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="chk-home" role="tabpanel">
+                    <div class="mb-3 mt-3">
+                        Aprovados: <span class="val-lives">0</span> |
+                        Recusados: <span class="val-dies">0</span> |
+                        Erros: <span class="val-errors">0</span> |
+                        Testados: <span class="val-tested">0</span> |
+                        Total: <span class="val-total">0</span>
+                    </div>
+                    <input type="hidden" id="cookie-input-2" placeholder="INSIRA O COOKIE: AMAZON" class="form-control mb-2">
+                    <textarea id="card_list" placeholder="Insira sua lista..." rows="8" class="form-control"></textarea>
+                </div>
+                <div class="tab-pane fade" id="chk-lives" role="tabpanel">
+                    <div class="tab-header">
+                        <h5>Aprovados (<span class="val-lives">0</span>)</h5>
+                        <div>
+                            <button class="btn-icon" id="copyLives"><i class="fa-solid fa-copy"></i></button>
+                            <button class="btn-icon" onclick="clearLives()"><i class="fa-solid fa-trash-can"></i></button>
+                        </div>
+                    </div>
+                    <div id="lives" style="overflow-y: auto; max-height: 300px;"></div>
+                </div>
+                <div class="tab-pane fade" id="chk-dies" role="tabpanel">
+                    <div class="tab-header">
+                        <h5>Recusados (<span class="val-dies">0</span>)</h5>
+                        <button class="btn-icon" onclick="clearDies()"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+                    <div id="dies" style="overflow-y: auto; max-height: 300px;"></div>
+                </div>
+                <div class="tab-pane fade" id="chk-errors" role="tabpanel">
+                    <div class="tab-header">
+                        <h5>Erros (<span class="val-errors">0</span>)</h5>
+                        <button class="btn-icon" onclick="clearErrors()"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+                    <div id="errors" style="overflow-y: auto; max-height: 300px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <!-- Login Modal -->
+    
+    <!-- User Modals -->
+    <div class="modal fade" id="confirmAddUserModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fa-solid fa-user-plus mr-2"></i>Confirmar Adição</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Deseja adicionar este novo usuário?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-dark" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-dark" id="confirmAddUserBtn">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fa-solid fa-trash-can mr-2"></i>Confirmar Exclusão</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Deseja realmente excluir o usuário <span id="deleteUserName"></span>?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-dark" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-dark" id="confirmDeleteBtn">Excluir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="editUserModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fa-solid fa-user-pen mr-2"></i>Editar Usuário</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Nova Senha para <span id="editUserName"></span></label>
+                        <input type="password" id="editPassword" class="form-control" required minlength="6" maxlength="30">
+                        <i class="fa-solid fa-lock input-icon"></i>
+                        <small class="form-text">Entre 6 e 30 caracteres</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-dark" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-dark" id="confirmEditBtn">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="renewUserModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fa-solid fa-clock-rotate-left mr-2"></i>Renovar Usuário</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Renovar assinatura para <span id="renewUserName"></span></p>
+                    <div class="form-group">
+                        <label>Escolha a duração:</label>
+                        <select id="renewDays" class="custom-select">
+                                                            <option value="1">+1 dias</option>
+                                                            <option value="2">+2 dias</option>
+                                                            <option value="3">+3 dias</option>
+                                                            <option value="4">+4 dias</option>
+                                                            <option value="5">+5 dias</option>
+                                                            <option value="6">+6 dias</option>
+                                                            <option value="7">+7 dias</option>
+                                                            <option value="8">+8 dias</option>
+                                                            <option value="9">+9 dias</option>
+                                                            <option value="10">+10 dias</option>
+                                                            <option value="11">+11 dias</option>
+                                                            <option value="12">+12 dias</option>
+                                                            <option value="13">+13 dias</option>
+                                                            <option value="14">+14 dias</option>
+                                                            <option value="15">+15 dias</option>
+                                                            <option value="16">+16 dias</option>
+                                                            <option value="17">+17 dias</option>
+                                                            <option value="18">+18 dias</option>
+                                                            <option value="19">+19 dias</option>
+                                                            <option value="20">+20 dias</option>
+                                                            <option value="21">+21 dias</option>
+                                                            <option value="22">+22 dias</option>
+                                                            <option value="23">+23 dias</option>
+                                                            <option value="24">+24 dias</option>
+                                                            <option value="25">+25 dias</option>
+                                                            <option value="26">+26 dias</option>
+                                                            <option value="27">+27 dias</option>
+                                                            <option value="28">+28 dias</option>
+                                                            <option value="29">+29 dias</option>
+                                                            <option value="30">+30 dias</option>
+                                                    </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Ou defina uma data específica:</label>
+                        <input type="date" id="renewDate" class="form-control">
+                        <i class="fa-solid fa-calendar-days input-icon"></i>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-dark" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-dark" id="confirmRenewBtn">Renovar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- API Modals -->
+    <div class="modal fade" id="confirmAddApiModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fa-solid fa-plus mr-2"></i>Confirmar Adição de API</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Deseja adicionar esta nova API?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-dark" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-dark" id="confirmAddApiBtn">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="editApiModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fa-solid fa-pen mr-2"></i>Editar API</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editApiForm">
+                        <input type="hidden" name="api_index" id="editApiIndex">
+                        <div class="form-group">
+                            <label>Nome da API</label>
+                            <input type="text" name="api_name" id="editApiName" class="form-control" required>
+                            <i class="fa-solid fa-tag input-icon"></i>
+                        </div>
+                        <div class="form-group">
+                            <label>Arquivo PHP</label>
+                            <input type="text" name="api_file" id="editApiFile" class="form-control" required>
+                            <i class="fa-solid fa-file-code input-icon"></i>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-dark" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-dark" id="confirmEditApiBtn">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        PladixOficial - Checker Plus © 2025 | Suporte: <a href="https://t.me/pladixoficial" target="_blank">@pladixoficial</a>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+    <script>
+        const MAX_LINES = 1000;
+        let stopped = true;
+        let paused = true;
+        let tested = 0;
+        let total = 0;
+        let lives = 0;
+        let dies = 0;
+        let errors = 0;
+        let audio = new Audio('live.mp3');
+
+        // Configure toastr
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+
+        function clearLives() { $("#lives").html(""); lives = 0; updateCounters(); }
+        function clearDies() { $("#dies").html(""); dies = 0; updateCounters(); }
+        function clearErrors() { $("#errors").html(""); errors = 0; updateCounters(); }
+
+        $(document).ready(function() {
+            
+            
+            
+            
+            
+            // Input validation for numeric fields
+            $('input[pattern="[0-9]*"]').on('input', function() {
+                this.value = this.value.replace(/[^0-9]/g, '');
+            });
+
+            // Input validation for username fields
+            $('input[pattern="[a-zA-Z0-9_\\-.]+"]').on('input', function() {
+                this.value = this.value.replace(/[^a-zA-Z0-9_\-.]/g, '');
+            });
+
+            // Input validation for activation key fields
+            $('input[pattern="[a-zA-Z0-9_\\-]+"]').on('input', function() {
+                this.value = this.value.replace(/[^a-zA-Z0-9_\-]/g, '');
+            });
+
+            $('#card_list').on('input', function() {
+                let lines = $(this).val().split('\n').filter(line => line.trim() !== '');
+                if (lines.length > MAX_LINES) {
+                    $(this).val(lines.slice(0, MAX_LINES).join('\n'));
+                    toastr.warning(`Limite máximo de ${MAX_LINES} linhas atingido!`);
+                }
+            });
+
+            $('#api-select').change(function() {
+                $("#chk-start").prop('disabled', !$(this).val());
+            });
+
+            function updateCounters() {
+                $(".val-total").text(total);
+                $(".val-lives").text(lives);
+                $(".val-dies").text(dies);
+                $(".val-errors").text(errors);
+                $(".val-tested").text(tested);
+            }
+
+            function testCards(card_list, threadCount) {
+                if (stopped || paused || tested >= total) {
+                    if (tested >= total) {
+                        $("#estatus").attr("class", "badge badge-success").text("Teste concluído");
+                        toastr.success(`Teste de ${total} itens concluído`);
+                        enableControls();
+                    }
+                    return;
+                }
+
+                let cardsToTest = card_list.slice(tested, tested + threadCount);
+                let requests = cardsToTest.map(card => {
+                    return $.ajax({
+                        url: '' + $("#api-select").val(),
+                        type: 'GET',
+                        data: {
+                            lista: card,
+                            token_api: $("#token_api").val(),
+                            cookie: $("#cookie-input-2").val().trim()
+                        }
+                    });
+                });
+
+                Promise.allSettled(requests).then(results => {
+                    if (stopped || paused) return;
+
+                    results.forEach((result, index) => {
+                        tested++;
+                        let card = cardsToTest[index];
+                        if (result.status === 'fulfilled') {
+                            let response = result.value;
+                            if (response.indexOf("Approved") >= 0) {
+                                lives++;
+                                $("#lives").append(`<div class="animate__animated animate__fadeIn">${response}</div>`);
+                                $("#estatus").attr("class", "badge badge-success").text(card + " -> APROVADO");
+                                toastr.success("Aprovado! " + card);
+                                audio.play();
+                            } else if (response.indexOf("Declined") >= 0) {
+                                dies++;
+                                $("#dies").append(`<div class="animate__animated animate__fadeIn">${response}</div>`);
+                                $("#estatus").attr("class", "badge badge-danger").text(card + " -> RECUSADO");
+                                toastr.error("Recusado! " + card);
+                            } else {
+                                errors++;
+                                $("#errors").append(`<div class="animate__animated animate__fadeIn">${response}</div>`);
+                                $("#estatus").attr("class", "badge badge-warning").text(card + " -> ERRO");
+                                toastr.warning("Erro! " + card);
+                            }
+                        } else {
+                            errors++;
+                            $("#errors").append(`<div class="animate__animated animate__fadeIn">${card} -> Erro na API</div>`);
+                            toastr.error("Erro na API!");
+                        }
+                        updateCounters();
+                    });
+
+                    $("#card_list").val(card_list.slice(tested).join('\n'));
+                    testCards(card_list, threadCount);
+                });
+            }
+
+            function enableControls() {
+                $("#chk-start").prop('disabled', !$("#api-select").val());
+                $("#chk-clean").prop('disabled', false);
+                $("#chk-stop").prop('disabled', true);
+                $("#chk-pause").prop('disabled', true);
+            }
+
+            $("#chk-start").click(function() {
+                let card_list_input = $('#card_list').val().trim();
+                let selectedApi = $("#api-select").val();
+                let threadCount = parseInt($("#thread-select").val());
+
+                if (!selectedApi) {
+                    toastr.warning("Selecione uma API!");
+                    $("#api-select").focus();
+                    return;
+                }
+                if (!card_list_input) {
+                    toastr.warning("Insira uma lista!");
+                    $('#card_list').focus();
+                    return;
+                }
+
+                let card_list = card_list_input.split('\n').filter(line => line.trim() !== '');
+                if (card_list.length > MAX_LINES) {
+                    toastr.error(`Limite de ${MAX_LINES} linhas excedido!`);
+                    return;
+                }
+
+                total = card_list.length;
+                threadCount = Math.min(threadCount, total);
+                stopped = false;
+                paused = false;
+                tested = lives = dies = errors = 0;
+
+                $("#chk-stop").prop('disabled', false);
+                $("#chk-pause").prop('disabled', false);
+                $("#chk-start").prop('disabled', true);
+                $("#chk-clean").prop('disabled', true);
+                $("#estatus").attr("class", "badge badge-success").text("Verificador iniciado...");
+                toastr.success("Verificador iniciado!");
+                testCards(card_list, threadCount);
+            });
+
+            $("#chk-pause").click(function() {
+                paused = true;
+                $("#chk-start").prop('disabled', false);
+                $("#chk-pause").prop('disabled', true);
+                toastr.info("Verificador pausado!");
+                $("#estatus").attr("class", "badge badge-info").text("Pausado...");
+            });
+
+            $("#chk-stop").click(function() {
+                stopped = true;
+                enableControls();
+                toastr.info("Verificador parado!");
+                $("#estatus").attr("class", "badge badge-secondary").text("Parado...");
+            });
+
+            $("#chk-clean").click(function() {
+                tested = total = lives = dies = errors = 0;
+                stopped = true;
+                updateCounters();
+                $("#card_list").val("");
+                $("#lives").html("");
+                $("#dies").html("");
+                $("#errors").html("");
+                toastr.info("Tudo limpo!");
+            });
+
+            $("#copyLives").click(function() {
+                const livesText = $("#lives").children().map((_, el) => $(el).text()).get().join('\n');
+                if (!livesText) {
+                    toastr.warning('Nenhum aprovado para copiar!');
+                    return;
+                }
+
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(livesText)
+                        .then(() => toastr.success('Aprovados copiados para a área de transferência!'))
+                        .catch(() => toastr.error('Erro ao copiar aprovados!'));
+                } else {
+                    const tempTextarea = $('<textarea>').val(livesText).appendTo('body').select();
+                    try {
+                        document.execCommand('copy');
+                        toastr.success('Aprovados copiados para a área de transferência!');
+                    } catch (err) {
+                        toastr.error('Erro ao copiar aprovados!');
+                    } finally {
+                        tempTextarea.remove();
+                    }
+                }
+            });
+
+            // Admin User Management
+            let currentUser;
+
+            $("#confirmAddUserBtn").click(function() {
+                $.ajax({
+                    url: '?page=admin',
+                    type: 'POST',
+                    data: $("#addUserForm").serialize() + '&add_user=1',
+                    success: function() {
+                        toastr.success('Usuário adicionado com sucesso!');
+                        $('#confirmAddUserModal').modal('hide');
+                        setTimeout(() => location.reload(), 1000);
+                    },
+                    error: function() {
+                        toastr.error('Erro ao adicionar usuário!');
+                    }
+                });
+            });
+
+            $('.delete-user').click(function() {
+                currentUser = $(this).data('user');
+                $('#deleteUserName').text(currentUser);
+                $('#confirmDeleteModal').modal('show');
+            });
+
+            $("#confirmDeleteBtn").click(function() {
+                $.ajax({
+                    url: '?page=admin&delete=' + currentUser,
+                    type: 'GET',
+                    success: function() {
+                        toastr.success('Usuário excluído com sucesso!');
+                        $('#confirmDeleteModal').modal('hide');
+                        $(`tr[data-user="${currentUser}"]`).remove();
+                    },
+                    error: function() {
+                        toastr.error('Erro ao excluir usuário!');
+                    }
+                });
+            });
+
+            $('.edit-user').click(function() {
+                currentUser = $(this).data('user');
+                $('#editUserName').text(currentUser);
+                $('#editUserModal').modal('show');
+            });
+
+            $("#confirmEditBtn").click(function() {
+                $.ajax({
+                    url: '?page=admin',
+                    type: 'POST',
+                    data: {
+                        edit_user: currentUser,
+                        new_password: $('#editPassword').val()
+                    },
+                    success: function() {
+                        toastr.success('Senha alterada com sucesso!');
+                        $('#editUserModal').modal('hide');
+                    },
+                    error: function() {
+                        toastr.error('Erro ao alterar senha!');
+                    }
+                });
+            });
+
+            $('.renew-user').click(function() {
+                currentUser = $(this).data('user');
+                $('#renewUserName').text(currentUser);
+                $('#renewUserModal').modal('show');
+            });
+
+            $("#confirmRenewBtn").click(function() {
+                let expiration = $('#renewDate').val();
+                if (!expiration) {
+                    const days = $('#renewDays').val();
+                    expiration = new Date();
+                    expiration.setDate(expiration.getDate() + parseInt(days));
+                    expiration = expiration.toISOString().split('T')[0];
+                }
+                $.ajax({
+                    url: '?page=admin',
+                    type: 'POST',
+                    data: {
+                        renew_user: currentUser,
+                        expiration: expiration
+                    },
+                    success: function() {
+                        toastr.success('Assinatura renovada com sucesso!');
+                        $('#renewUserModal').modal('hide');
+                        $(`tr[data-user="${currentUser}"] td:eq(2)`).text(expiration);
+                    },
+                    error: function() {
+                        toastr.error('Erro ao renovar assinatura!');
+                    }
+                });
+            });
+
+            // Admin API Management
+            $("#confirmAddApiBtn").click(function() {
+                $.ajax({
+                    url: '?page=admin',
+                    type: 'POST',
+                    data: $("#addApiForm").serialize() + '&add_api=1',
+                    success: function() {
+                        toastr.success('API adicionada com sucesso!');
+                        $('#confirmAddApiModal').modal('hide');
+                        setTimeout(() => location.reload(), 1000);
+                    },
+                    error: function() {
+                        toastr.error('Erro ao adicionar API!');
+                    }
+                });
+            });
+
+            $('.edit-api').click(function() {
+                const index = $(this).data('api');
+                const row = $(`tr[data-api="${index}"]`);
+                $('#editApiIndex').val(index);
+                $('#editApiName').val(row.find('td:eq(0)').text());
+                $('#editApiFile').val(row.find('td:eq(1)').text());
+                $('#editApiModal').modal('show');
+            });
+
+            $("#confirmEditApiBtn").click(function() {
+                $.ajax({
+                    url: '?page=admin',
+                    type: 'POST',
+                    data: $("#editApiForm").serialize() + '&edit_api=1',
+                    success: function() {
+                        toastr.success('API editada com sucesso!');
+                        $('#editApiModal').modal('hide');
+                        setTimeout(() => location.reload(), 1000);
+                    },
+                    error: function() {
+                        toastr.error('Erro ao editar API!');
+                    }
+                });
+            });
+
+            $('.delete-api').click(function() {
+                const index = $(this).data('api');
+                if (confirm('Deseja realmente excluir esta API?')) {
+                    $.ajax({
+                        url: '?page=admin&delete_api=' + index,
+                        type: 'GET',
+                        success: function() {
+                            toastr.success('API excluída com sucesso!');
+                            $(`tr[data-api="${index}"]`).remove();
+                        },
+                        error: function() {
+                            toastr.error('Erro ao excluir API!');
+                        }
+                    });
+                }
+            });
+
+            // Key Management
+            $("#generateKeyBtn").click(function() {
+                $.get('?api=generatekey', function(data) {
+                    let key = JSON.parse(data).key;
+                    $("#keysTable").append(`<tr><td>${key}</td><td><span class="badge badge-success">Válida</span></td><td>-</td><td>-</td></tr>`);
+                    toastr.success('Chave gerada: ' + key);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
